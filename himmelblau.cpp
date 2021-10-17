@@ -1,3 +1,6 @@
+#include <cmath>
+#include <random>
+
 namespace himmelblau {
 
     double himmelblau_function(std::vector<double> p) {
@@ -6,22 +9,18 @@ namespace himmelblau {
         return (pow((x * x + y - 11), 2) + pow((x + y * y - 7), 2));
     }
 
-    double negative_himmelblau_function(std::vector<double> p) {
+    double negative_himmelblau_function(std::vector<double> const &p) {
         return -himmelblau::himmelblau_function(p);
     }
 
-    std::vector<double> point_offset(std::vector<double> point) {
-        for (int i = 0; i < point.size(); i++) {
-            point[i] += (double(rand() % 3) - 1) / 1000;
-        }
-        return point;
-    }
-
-    std::vector<double> starting_point() {
-        return {((rand() % 1000 - 500) / 100.0), ((rand() % 1000 - 500) / 100.0)};
+    std::vector<double> random_starting_point() {
+        static std::random_device device;
+        static std::mt19937 generator(device());
+        static std::uniform_real_distribution<double> distribution(-5, 5);
+        return {distribution(generator), distribution(generator)};
     }
 
     bool domain(std::vector<double> p) {
-        return p.size() == 2 && abs(p[0]) <= 5 && abs(p[1]) <= 5;
+        return p.size() == 2 && std::abs(p[0]) <= 5 && std::abs(p[1]) <= 5;
     }
 }
